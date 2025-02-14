@@ -57,7 +57,7 @@ Door dit contract te ondertekenen, stemmen alle teamleden ermee in zich te houde
 
 Handtekeningen:  
 Zaine  \- \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  
-Hayden \- HAYDENNNN!!
+Hayden \- HAYDENNNN!!\_
 Puck \- \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  
 Diego \- \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
