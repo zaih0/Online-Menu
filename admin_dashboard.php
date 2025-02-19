@@ -5,7 +5,8 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 ?>
-
+<link rel="stylesheet" href="./css/admin.css">
+<div id="add_item">
 <form method="POST" enctype="multipart/form-data">
     <input type="text" name="name" placeholder="Food Name" required><br>
     <input type="number" name="price" step="0.01" placeholder="Price" required><br>
@@ -24,6 +25,8 @@ if (!isset($_SESSION['admin'])) {
     </select><br>
     <button type="submit" name="add_item">Add Item</button>
 </form>
+</div>
+
 
 <?php
 $conn = new mysqli("localhost", "admin", "admin", "db_onlinemenu");
