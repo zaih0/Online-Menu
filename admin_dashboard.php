@@ -27,9 +27,12 @@ if (!isset($_SESSION['admin'])) {
 </form>
 </div>
 
-
 <?php
 $conn = new mysqli("localhost", "admin", "admin", "db_onlinemenu");
+
+if ($conn->connect_error) {
+    die("Connection failed: {$conn->connect_error}");
+}
 
 if (isset($_POST['add_item'])) {
     $name = $_POST['name'];
@@ -40,14 +43,30 @@ if (isset($_POST['add_item'])) {
 
     // Handle image upload
     $image_path = "uploads/" . basename($_FILES["image"]["name"]);
-    move_uploaded_file($_FILES["image"]["tmp_name"], $image_path);
+    if (!move_uploaded_file($_FILES["image"]["tmp_name"], $image_path)) {
+        die("Failed to upload image.");
+    }
+
+    // Icon path
+    $icon_path = "{$icon_dir}{$icon}";
 
     $stmt = $conn->prepare("INSERT INTO tb_menu (fname, price, image, catagory_id, stock, icon) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssdiss", $name, $price, $image_path, $category, $stock, $icon);
+    if ($stmt === false) {
+        die("Prepare failed: {$conn->error}");
+    }
 
-    echo "Menu item added!";
-    header("Location: admin_dashboard.php");
-    exit();
+    $stmt->bind_param("sdsiss", $name, $price, $image_path, $category, $stock, $icon_path);
+
+    if ($stmt->execute()) {
+        echo "Menu item added!";
+        header("Location: admin_dashboard.php");
+        exit();
+    } else {
+        die("Execute failed: {$stmt->error}");
+    }
+
 }
+
+$conn->close();
 ?>
 <a href="admin_logout.php">Logout</a>
