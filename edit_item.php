@@ -9,9 +9,10 @@ $id = $_POST['id'];
 $name = $_POST['name'];
 $price = $_POST['price'];
 $stock = $_POST['stock'];
+$icon = $_POST['icon'];
 
-$stmt = $conn->prepare("UPDATE tb_menu SET fname=?, price=?, stock=? WHERE id=?");
-$stmt->bind_param("sdii", $name, $price, $stock, $id);
+$stmt = $conn->prepare("UPDATE tb_menu SET fname=?, price=?, stock=?, icon=? WHERE id=?");
+$stmt->bind_param("sdisi", $name, $price, $stock, $icon, $id);
 
 if ($stmt->execute()) {
     echo "Success";
