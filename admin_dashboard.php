@@ -10,7 +10,7 @@ if (!isset($_SESSION['admin'])) {
 <form method="POST" enctype="multipart/form-data">
     <input type="text" name="name" placeholder="Food Name" required><br>
     <input type="number" name="price" step="0.01" placeholder="Price" required><br>
-    <input type="text" name="catagory" placeholder="Catagory" required><br>
+    <input type="text" name="category" placeholder="Category" required><br>
     <input type="number" name="stock" placeholder="Stock" required><br>
     <input type="file" name="image" required><br>
     <select name="icon" required>
@@ -28,16 +28,17 @@ if (!isset($_SESSION['admin'])) {
 </div>
 
 <?php
-$conn = new mysqli("localhost", "admin", "admin", "db_onlinemenu");
-
-if ($conn->connect_error) {
-    die("Connection failed: {$conn->connect_error}");
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=db_onlinemenu", "admin", "admin");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 if (isset($_POST['add_item'])) {
     $name = $_POST['name'];
     $price = $_POST['price'];
-    $catagory = $_POST['catagory'];
+    $category = $_POST['category'];
     $stock = $_POST['stock'];
     $icon = $_POST['icon'];
 
@@ -50,61 +51,60 @@ if (isset($_POST['add_item'])) {
     // Icon path
     $icon_path = "{$icon_dir}{$icon}";
 
-    $stmt = $conn->prepare("INSERT INTO tb_menu (fname, price, image, catagory, stock, icon) VALUES (?, ?, ?, ?, ?, ?)");
-    if ($stmt === false) {
-        die("Prepare failed: {$conn->error}");
-    }
-
-    $stmt->bind_param("sdsiss", $name, $price, $image_path, $catagory, $stock, $icon_path);
-
-    if ($stmt->execute()) {
+    try {
+        $stmt = $conn->prepare("INSERT INTO tb_menu (fname, price, image, category, stock, icon) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $price, $image_path, $category, $stock, $icon_path]);
         echo "Menu item added!";
         header("Location: admin_dashboard.php");
         exit();
-    } else {
-        die("Execute failed: {$stmt->error}");
+    } catch (PDOException $e) {
+        die("Execute failed: " . $e->getMessage());
     }
-
 }
 
-$conn->close();
+$conn = null;
 ?>
 
 <?php
-$conn = new mysqli("localhost", "admin", "admin", "db_onlinemenu");
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=db_onlinemenu", "admin", "admin");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
-$result = $conn->query("SELECT * FROM tb_menu");
+try {
+    $result = $conn->query("SELECT * FROM tb_menu");
 
-echo "<table border='1'>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Category</th>
-            <th>Icon</th>
-            <th>Actions</th>
-        </tr>";
+    echo "<table border='1'>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Icon</th>
+                <th>Actions</th>
+            </tr>";
 
-while ($row = $result->fetch_assoc()) {
-    echo "<tr id='row_{$row['id']}'>
-            <td><input type='text' value='{$row['fname']}' id='name_{$row['id']}'></td>
-            <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
-            <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
-            <td>{$row['catagory']}</td>
-            <td><img src='{$row['icon']}' width='30'></td>
-            <td>
-                <button onclick='updateItem({$row['id']})'>Save</button>
-                <button onclick='deleteItem({$row['id']})'>Delete</button>
-            </td>
-          </tr>";
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr id='row_{$row['id']}'>
+                <td><input type='text' value='{$row['fname']}' id='name_{$row['id']}'></td>
+                <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
+                <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
+                <td>{$row['category']}</td>
+                <td><img src='{$row['icon']}' width='30'></td>
+                <td>
+                    <button onclick='updateItem({$row['id']})'>Save</button>
+                    <button onclick='deleteItem({$row['id']})'>Delete</button>
+                </td>
+              </tr>";
+    }
+    echo "</table>";
+} catch (PDOException $e) {
+    die("Query failed: " . $e->getMessage());
 }
-echo "</table>";
 
-$conn->close();
+$conn = null;
 ?>
 <script>
 function updateItem(id) {
