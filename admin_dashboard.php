@@ -8,6 +8,16 @@ if (!isset($_SESSION['admin'])) {
 <link rel="stylesheet" href="./css/admin.css">
 <div id="add_item">
 <form method="POST" enctype="multipart/form-data">
+<select name="day" required>
+    <option value="">Select Day</option>
+    <option value="monday">Monday</option>
+    <option value="tuesday">Tuesday</option>
+    <option value="wednesday">Wednesday</option>
+    <option value="thursday">Thursday</option>
+    <option value="friday">Friday</option>
+</select><br>
+
+
     <input type="text" name="name" placeholder="Food Name" required><br>
     <input type="number" name="price" step="0.01" placeholder="Price" required><br>
     <input type="text" name="category" placeholder="Category" required><br>
@@ -41,6 +51,7 @@ if (isset($_POST['add_item'])) {
     $category = $_POST['category'];
     $stock = $_POST['stock'];
     $icon = $_POST['icon'];
+    $day = $_POST['day'];
 
     // Handle image upload
     $image_path = "uploads/" . basename($_FILES["image"]["name"]);
@@ -48,11 +59,16 @@ if (isset($_POST['add_item'])) {
         die("Failed to upload image.");
     }
 
+    $valid_days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+    if (!in_array($day, $valid_days)) {
+        die("Invalid day selected.");
+    }
+
     // Icon path
     $icon_path = "{$icon_dir}{$icon}";
 
     try {
-        $stmt = $conn->prepare("INSERT INTO tb_menu (fname, price, image, category, stock, icon) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO tb_menu_$day (fname, price, image, category, stock, icon) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$name, $price, $image_path, $category, $stock, $icon_path]);
         echo "Menu item added!";
         header("Location: admin_dashboard.php");
@@ -73,8 +89,144 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
+echo "<h2>Monday Menu</h2>";
 try {
     $result = $conn->query("SELECT * FROM tb_menu");
+
+    echo "<table border='1'>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Icon</th>
+                <th>Actions</th>
+            </tr>";
+
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr id='row_{$row['id']}'>
+                <td><input type='text' value='{$row['fname']}' id='name_{$row['id']}'></td>
+                <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
+                <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
+                <td>{$row['category']}</td>
+                <td><img src='{$row['icon']}' width='30'></td>
+                <td>
+                    <button onclick='updateItem({$row['id']})'>Save</button>
+                    <button onclick='deleteItem({$row['id']})'>Delete</button>
+                </td>
+              </tr>";
+    }
+    echo "</table>";
+} catch (PDOException $e) {
+    die("Query failed: " . $e->getMessage());
+}
+echo "<br>";
+echo "<h2>Tuesday Menu</h2>";
+
+try {
+    $result = $conn->query("SELECT * FROM tb_menu_tuesday");
+
+    echo "<table border='1'>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Icon</th>
+                <th>Actions</th>
+            </tr>";
+
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr id='row_{$row['id']}'>
+                <td><input type='text' value='{$row['fname']}' id='name_{$row['id']}'></td>
+                <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
+                <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
+                <td>{$row['category']}</td>
+                <td><img src='{$row['icon']}' width='30'></td>
+                <td>
+                    <button onclick='updateItem({$row['id']})'>Save</button>
+                    <button onclick='deleteItem({$row['id']})'>Delete</button>
+                </td>
+              </tr>";
+    }
+    echo "</table>";
+} catch (PDOException $e) {
+    die("Query failed: " . $e->getMessage());
+}
+
+echo "<br>";
+echo "<h2>Wednesday Menu</h2>";
+
+try {
+    $result = $conn->query("SELECT * FROM tb_menu_wednesday");
+
+    echo "<table border='1'>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Icon</th>
+                <th>Actions</th>
+            </tr>";
+
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr id='row_{$row['id']}'>
+                <td><input type='text' value='{$row['fname']}' id='name_{$row['id']}'></td>
+                <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
+                <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
+                <td>{$row['category']}</td>
+                <td><img src='{$row['icon']}' width='30'></td>
+                <td>
+                    <button onclick='updateItem({$row['id']})'>Save</button>
+                    <button onclick='deleteItem({$row['id']})'>Delete</button>
+                </td>
+              </tr>";
+    }
+    echo "</table>";
+} catch (PDOException $e) {
+    die("Query failed: " . $e->getMessage());
+}
+
+echo "<br>";
+echo "<h2>Thursday Menu</h2>";
+
+try {
+    $result = $conn->query("SELECT * FROM tb_menu_thursday");
+
+    echo "<table border='1'>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Icon</th>
+                <th>Actions</th>
+            </tr>";
+
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr id='row_{$row['id']}'>
+                <td><input type='text' value='{$row['fname']}' id='name_{$row['id']}'></td>
+                <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
+                <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
+                <td>{$row['category']}</td>
+                <td><img src='{$row['icon']}' width='30'></td>
+                <td>
+                    <button onclick='updateItem({$row['id']})'>Save</button>
+                    <button onclick='deleteItem({$row['id']})'>Delete</button>
+                </td>
+              </tr>";
+    }
+    echo "</table>";
+} catch (PDOException $e) {
+    die("Query failed: " . $e->getMessage());
+}
+
+echo "<br>";
+echo "<h2>Friday Menu</h2>";
+
+try {
+    $result = $conn->query("SELECT * FROM tb_menu_friday");
 
     echo "<table border='1'>
             <tr>
@@ -107,7 +259,7 @@ try {
 $conn = null;
 ?>
 <script>
-function updateItem(id) {
+function updateItem(id, day) {
     let name = document.getElementById(`name_${id}`).value;
     let price = document.getElementById(`price_${id}`).value;
     let stock = document.getElementById(`stock_${id}`).value;
@@ -115,7 +267,7 @@ function updateItem(id) {
     fetch('edit_item.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `id=${id}&name=${name}&price=${price}&stock=${stock}`
+        body: `id=${id}&name=${name}&price=${price}&stock=${stock}&day=${day}`
     })
     .then(response => response.text())
     .then(data => {
@@ -127,12 +279,12 @@ function updateItem(id) {
     });
 }
 
-function deleteItem(id) {
+function deleteItem(id, day) {
     if (confirm("Are you sure you want to delete this item?")) {
         fetch('delete_item.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${id}`
+            body: `id=${id}&day=${day}`
         })
         .then(response => response.text())
         .then(data => {
@@ -145,6 +297,7 @@ function deleteItem(id) {
         });
     }
 }
+
 </script>
 
 

@@ -5,16 +5,24 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$id = $_POST['id'];
 
-$stmt = $conn->prepare("DELETE FROM tb_menu WHERE id=?");
-$stmt->bind_param("i", $id);
 
-if ($stmt->execute()) {
-    echo "Deleted";
-} else {
-    echo "Error: " . $conn->error;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id = $_POST['id'];
+    $day = $_POST['day'];
+
+    $valid_days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+    if (!in_array($day, $valid_days)) {
+        die("Invalid day.");
+    }
+
+    try {
+        $stmt = $conn->prepare("DELETE FROM tb_menu_$day WHERE id=?");
+        $stmt->execute([$id]);
+        echo "Deleted";
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
-
-$conn->close();
 ?>
+

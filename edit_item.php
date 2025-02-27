@@ -5,20 +5,25 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$id = $_POST['id'];
-$name = $_POST['name'];
-$price = $_POST['price'];
-$stock = $_POST['stock'];
-$icon = $_POST['icon'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $price = $_POST['price'];
+    $stock = $_POST['stock'];
+    $day = $_POST['day'];
 
-$stmt = $conn->prepare("UPDATE tb_menu SET fname=?, price=?, stock=?, icon=? WHERE id=?");
-$stmt->bind_param("sdisi", $name, $price, $stock, $icon, $id);
+    $valid_days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+    if (!in_array($day, $valid_days)) {
+        die("Invalid day.");
+    }
 
-if ($stmt->execute()) {
-    echo "Success";
-} else {
-    echo "Error: " . $conn->error;
+    try {
+        $stmt = $conn->prepare("UPDATE tb_menu_$day SET fname=?, price=?, stock=? WHERE id=?");
+        $stmt->execute([$name, $price, $stock, $id]);
+        echo "Success";
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
-
-$conn->close();
 ?>
+
