@@ -123,7 +123,7 @@ try {
                 <td>
                     <button onclick='updateItem({$row['id']}, {$day})'>Save</button>
 
-                    <button onclick='deleteItem({$row['id']} ?>, 'monday)'>Delete</button>
+                    <button onclick='deleteItem({$row['id']})'>Delete</button>
                 </td>
               </tr>";
     }
@@ -166,7 +166,7 @@ try {
                     <button onclick='updateItem({$row['id']})'>Save</button>
                     <button onclick='deleteItem({$row['id']})'>Delete</button>
                 </td>
-              </tr>";
+            </tr>";
     }
     echo "</table>";
 } catch (PDOException $e) {
@@ -311,7 +311,7 @@ $conn = null;
         fetch('edit_item.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${id}&name=${name}&price=${price}&stock=${stock}&day=${day}&icon=${icon}`
+            body: `id=${id}&name=${name}&price=${price}&stock=${stock}&icon=${icon}`
         })
         .then(response => response.text())
         .then(data => {

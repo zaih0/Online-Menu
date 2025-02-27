@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = $_POST['price'];
     $stock = $_POST['stock'];
     $icon = $_POST['icon'];
-    $day = $_POST['day'];
+
 
     $valid_days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
     if (!in_array($day, $valid_days)) {

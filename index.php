@@ -49,6 +49,7 @@
     $conn->close();
     ?>
     <a href="Days/tuesday.php">Tuesday</a>
+    <a href="Days/friday.php">Friday</a>
     
 
     <script>
