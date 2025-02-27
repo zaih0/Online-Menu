@@ -15,7 +15,7 @@
             <div class="stripe3 stripe"></div>
         </div>
         <div class="logo"><img src="./logo-mees/logo-mees.svg" alt="MEES??"></div>
-        <a href="./opening-times.php" class="opening-times"><img src="../logo-mees/clock.png" alt="clock icon"></a>
+        <a href="../opening-times.php" class="opening-times"><img src="../logo-mees/clock.png" alt="clock icon"></a>
     </div>
     <h1 style="display: flex; justify-content: center;">Thursday Menu</h1>
 
