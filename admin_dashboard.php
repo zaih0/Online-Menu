@@ -5,6 +5,8 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 ?>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./css/admin.css">
 <div id="add_item">
 <form method="POST" enctype="multipart/form-data">
@@ -91,7 +93,7 @@ try {
 
 echo "<h2>Monday Menu</h2>";
 try {
-    $result = $conn->query("SELECT * FROM tb_menu");
+    $result = $conn->query("SELECT * FROM tb_menu_monday");
 
     echo "<table border='1'>
             <tr>
@@ -109,10 +111,19 @@ try {
                 <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
                 <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
                 <td>{$row['category']}</td>
-                <td><img src='{$row['icon']}' width='30'></td>
                 <td>
-                    <button onclick='updateItem({$row['id']})'>Save</button>
-                    <button onclick='deleteItem({$row['id']})'>Delete</button>
+                    <img src='{$row['icon']}' width='30'><br>
+                    <select id='icon_{$row['id']}'>
+                        <option value=''>Select Icon</option>";
+                        foreach ($icons as $icon) {
+                            echo "<option value='$icon' " . ($row['icon'] == "assets/$icon" ? "selected" : "") . ">$icon</option>";
+                        }
+        echo "      </select>
+                </td>
+                <td>
+                    <button onclick='updateItem({$row['id']}, {$day})'>Save</button>
+
+                    <button onclick='deleteItem({$row['id']} ?>, 'monday)'>Delete</button>
                 </td>
               </tr>";
     }
@@ -142,7 +153,15 @@ try {
                 <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
                 <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
                 <td>{$row['category']}</td>
-                <td><img src='{$row['icon']}' width='30'></td>
+                                <td>
+                    <img src='{$row['icon']}' width='30'><br>
+                    <select id='icon_{$row['id']}'>
+                        <option value=''>Select Icon</option>";
+                        foreach ($icons as $icon) {
+                            echo "<option value='$icon' " . ($row['icon'] == "assets/$icon" ? "selected" : "") . ">$icon</option>";
+                        }
+        echo "      </select>
+                </td>
                 <td>
                     <button onclick='updateItem({$row['id']})'>Save</button>
                     <button onclick='deleteItem({$row['id']})'>Delete</button>
@@ -176,7 +195,15 @@ try {
                 <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
                 <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
                 <td>{$row['category']}</td>
-                <td><img src='{$row['icon']}' width='30'></td>
+                                <td>
+                    <img src='{$row['icon']}' width='30'><br>
+                    <select id='icon_{$row['id']}'>
+                        <option value=''>Select Icon</option>";
+                        foreach ($icons as $icon) {
+                            echo "<option value='$icon' " . ($row['icon'] == "assets/$icon" ? "selected" : "") . ">$icon</option>";
+                        }
+        echo "      </select>
+                </td>
                 <td>
                     <button onclick='updateItem({$row['id']})'>Save</button>
                     <button onclick='deleteItem({$row['id']})'>Delete</button>
@@ -210,7 +237,15 @@ try {
                 <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
                 <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
                 <td>{$row['category']}</td>
-                <td><img src='{$row['icon']}' width='30'></td>
+                                <td>
+                    <img src='{$row['icon']}' width='30'><br>
+                    <select id='icon_{$row['id']}'>
+                        <option value=''>Select Icon</option>";
+                        foreach ($icons as $icon) {
+                            echo "<option value='$icon' " . ($row['icon'] == "assets/$icon" ? "selected" : "") . ">$icon</option>";
+                        }
+        echo "      </select>
+                </td>
                 <td>
                     <button onclick='updateItem({$row['id']})'>Save</button>
                     <button onclick='deleteItem({$row['id']})'>Delete</button>
@@ -244,7 +279,15 @@ try {
                 <td><input type='number' value='{$row['price']}' id='price_{$row['id']}'></td>
                 <td><input type='number' value='{$row['stock']}' id='stock_{$row['id']}'></td>
                 <td>{$row['category']}</td>
-                <td><img src='{$row['icon']}' width='30'></td>
+                                <td>
+                    <img src='{$row['icon']}' width='30'><br>
+                    <select id='icon_{$row['id']}'>
+                        <option value=''>Select Icon</option>";
+                        foreach ($icons as $icon) {
+                            echo "<option value='$icon' " . ($row['icon'] == "assets/$icon" ? "selected" : "") . ">$icon</option>";
+                        }
+        echo "      </select>
+                </td>
                 <td>
                     <button onclick='updateItem({$row['id']})'>Save</button>
                     <button onclick='deleteItem({$row['id']})'>Delete</button>
@@ -259,44 +302,46 @@ try {
 $conn = null;
 ?>
 <script>
-function updateItem(id, day) {
-    let name = document.getElementById(`name_${id}`).value;
-    let price = document.getElementById(`price_${id}`).value;
-    let stock = document.getElementById(`stock_${id}`).value;
+    function updateItem(id, day) {
+        let name = document.getElementById(`name_${id}`).value;
+        let price = document.getElementById(`price_${id}`).value;
+        let stock = document.getElementById(`stock_${id}`).value;
+        let icon = document.getElementById(`icon_${id}`).value;
 
-    fetch('edit_item.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `id=${id}&name=${name}&price=${price}&stock=${stock}&day=${day}`
-    })
-    .then(response => response.text())
-    .then(data => {
-        if (data === "Success") {
-            alert("Item updated successfully!");
-        } else {
-            alert("Error updating item: " + data);
-        }
-    });
-}
-
-function deleteItem(id, day) {
-    if (confirm("Are you sure you want to delete this item?")) {
-        fetch('delete_item.php', {
+        fetch('edit_item.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${id}&day=${day}`
+            body: `id=${id}&name=${name}&price=${price}&stock=${stock}&day=${day}&icon=${icon}`
         })
         .then(response => response.text())
         .then(data => {
-            if (data === "Deleted") {
-                document.getElementById(`row_${id}`).remove();
-                alert("Item deleted!");
+            console.log(data); // Debugging
+            if (data === "Success") {
+                alert("Item updated successfully!");
             } else {
-                alert("Error deleting item: " + data);
+                alert("Error updating item: " + data);
             }
         });
     }
-}
+
+    function deleteItem(id, day) {
+        if (confirm("Are you sure you want to delete this item?")) {
+            fetch('delete_item.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id=${id}&day=${day}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === "Deleted") {
+                    document.getElementById(`row_${id}`).remove();
+                    alert("Item deleted!");
+                } else {
+                    alert("Error deleting item: " + data);
+                }
+            });
+        }
+    }
 
 </script>
 

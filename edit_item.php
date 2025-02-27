@@ -1,15 +1,12 @@
 <?php
 $conn = new mysqli("localhost", "admin", "admin", "db_onlinemenu");
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
     $name = $_POST['name'];
     $price = $_POST['price'];
     $stock = $_POST['stock'];
+    $icon = $_POST['icon'];
     $day = $_POST['day'];
 
     $valid_days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
@@ -17,13 +14,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Invalid day.");
     }
 
+    // Dynamically set table name
+    $table_name = "tb_menu_" . $day;
+
     try {
-        $stmt = $conn->prepare("UPDATE tb_menu_$day SET fname=?, price=?, stock=? WHERE id=?");
-        $stmt->execute([$name, $price, $stock, $id]);
+        $stmt = $conn->prepare("UPDATE $table_name SET fname=?, price=?, stock=?, icon=? WHERE id=?");
+        $stmt->bind_param("sdisi", $name, $price, $stock, $icon, $id);
+        $stmt->execute();
+
         echo "Success";
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
 }
+if (!isset($_POST['day']) || !in_array($day, $valid_days)) {
+    die("Invalid day. Received: " . htmlspecialchars($day));
+}
 ?>
+
 

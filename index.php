@@ -6,6 +6,9 @@
     <title>MEES Catering | Online Menu</title>
     <link rel="stylesheet" href="./css/index.css">
     <link rel="icon" href="./logo-mees/mees_icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="topbalk">
@@ -15,7 +18,7 @@
             <div class="stripe3 stripe"></div>
         </div>
         <div class="logo"><img src="./logo-mees/logo-mees.svg" alt="MEES??"></div>
-        <a href="opening-times.php" class="opening-times"><img src="logo-mees/clock.png" alt="clocl icon"></a>
+        <a href="opening-times.php" class="opening-times"><img src="logo-mees/clock.png" alt="clock icon"></a>
     </div>
     <h1 style="display: flex; justify-content: center;">Monday Menu</h1>
 
@@ -26,7 +29,7 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $result = $conn->query("SELECT * FROM tb_menu");
+    $result = $conn->query("SELECT * FROM tb_menu_monday");
 
     echo "<div class='menu-container'>"; // Wrapper div for styling
 
@@ -45,6 +48,8 @@
 
     $conn->close();
     ?>
+    <a href="Days/tuesday.php">Tuesday</a>
+    
 
     <script>
     function loadMenu() {
