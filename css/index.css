@@ -83,6 +83,9 @@ body{
     margin: 5px;
 }
 
+/* The side navigation menu */
+
+
 
 }
 
@@ -135,7 +138,6 @@ body{
     .menu{
         height: 43px;
         width: 40.67px;
-        background-color: #F56E28;
         position: absolute;
         top:5px;
         left:5px;
@@ -186,7 +188,69 @@ body{
     
     
     }
+    .sidenav {
+        width: 0; /* Closed by default */
+    }
 
+    .sidenav a {
+        font-size: 20px; /* Reduce text size for better fit */
+        padding: 8px 8px; /* Adjust padding */
+    }
 
-    
+    .sidenav .closebtn {
+        font-size: 30px; /* Slightly smaller close button */
+        right: 15px;
+    }
+
+    #main {
+        margin-left: 0; /* Keep content centered when closed */
+    }
+
+    /* When open, make sidenav take the full width */
+    .sidenav.open {
+        width: 100%; /* Full screen sidenav */
+    }
+
 }
+
+
+.sidenav {
+    height: 100%; 
+    width: 0;
+    position: fixed; 
+    z-index: 1; 
+    top: 0;
+    left: 0;
+    background-color: #F56E28; 
+    overflow-x: hidden; 
+    padding-top: 60px; 
+    transition: 0.5s; 
+  }
+  
+  /* The navigation menu links */
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+  }
+
+  .sidenav a:hover {
+    text-decoration: underline;
+  }
+  
+
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  
+  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+  #main {
+    transition: margin-left .5s;
+  }
