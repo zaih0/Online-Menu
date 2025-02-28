@@ -19,6 +19,7 @@
         <a href="friday.php">Friday</a>
         <a href="https://meescatering.nl/werken-in-de-catering/">Vacatures</a>
         <a href="https://meescatering.nl/contact/">Contact</a>
+        <div id="google_translate_element"></div>
 
     </div>
 
@@ -89,8 +90,18 @@
         document.getElementById("main").style.marginLeft= "0";
         document.body.style.backgroundColor = "white";
         }
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+            {pageLanguage: 'en'}, // Change 'en' to your default language if different
+            'google_translate_element'
+            );
+        }
+
 
     setInterval(loadMenu, 5000); // Refresh every 5 seconds
+    </script>
+        <script type="text/javascript" 
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script>
 
 </body>
